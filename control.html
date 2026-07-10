@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D-Tube | Admin Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="brand">▶ <span>D-Tube</span></a>
+        <div class="nav-links" id="auth-links"></div>
+    </nav>
+
+    <div class="auth-container" style="max-width: 500px; margin-top: 50px; border-top: 4px solid var(--dtube-red);">
+        <h2 style="color: var(--dtube-red);">⚙️ Admin Control Panel</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+            Warning: Banning a user permanently deletes their account, wipes their videos, and cascades to remove all their comments and likes.
+        </p>
+
+        <form id="ban-form">
+            <label style="font-weight: bold; margin-bottom: 5px; display: block;">User ID to Ban:</label>
+            <input type="number" id="ban-user-id" placeholder="Enter User ID (e.g., 2)" required style="font-size: 18px; text-align: center;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 16px; padding: 12px;">
+                🔨 Ban & Erase User
+            </button>
+        </form>
+
+        <p id="ban-status" style="text-align: center; margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Security Check: Kick non-admins out immediately
+        window.onload = () => {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = 'index.html';
+
+            try {
+                const decoded = JSON.parse(atob(token.split('.')[1]));
+                if (decoded.role !== 'admin') {
+                    alert("Security Alert: Admin privileges required.");
+                    window.location.href = 'index.html';
+                }
+            } catch (e) {
+                window.location.href = 'index.html';
+            }
+        };
+
+        // Handle the Ban Request
+        document.getElementById('ban-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('ban-user-id').value;
+            const token = localStorage.getItem('token');
+            const statusText = document.getElementById('ban-status');
+
+            // Final confirmation pop-up
+            if (!confirm(`Are you absolutely sure you want to permanently delete User ID ${userId}?`)) {
+                return; // Cancel action
+            }
+
+            statusText.innerText = "Processing server request...";
+            statusText.style.color = "var(--text-muted)";
+
+            try {
+                const res = await fetch(`${API_URL}/admin/user/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    statusText.innerText = `✅ Success: ${data.message}`;
+                    statusText.style.color = "#4CAF50";
+                    document.getElementById('ban-user-id').value = ''; // Clear the input box
+                } else {
+                    statusText.innerText = `❌ Error: ${data.error}`;
+                    statusText.style.color = "var(--dtube-red)";
+                }
+            } catch (err) {
+                statusText.innerText = "❌ Network Error";
+                statusText.style.color = "var(--dtube-red)";
+            }
+        });
+    </script>
+</body>
+</html>

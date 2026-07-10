@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D-Tube | Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="brand">▶ <span>D-Tube</span></a>
+        <div class="nav-links" id="auth-links"></div>
+    </nav>
+
+    <div class="container">
+        <h2 style="margin-bottom: 20px;">Recommended Feed</h2>
+        <div class="video-grid" id="feed">
+            <p style="color: #aaa;">Loading videos...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Fetch videos from the backend when the page loads
+        async function loadFeed() {
+            try {
+                const response = await fetch(`${API_URL}/videos/feed`);
+                const data = await response.json();
+                const feedDiv = document.getElementById('feed');
+                
+                feedDiv.innerHTML = ''; // Clear loading text
+
+                if (!data.videos || data.videos.length === 0) {
+                    feedDiv.innerHTML = '<p>No videos found. Be the first to upload!</p>';
+                    return;
+                }
+
+                data.videos.forEach(video => {
+                    // Create a clickable card that passes the video data in the URL
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.onclick = () => window.location.href = `video.html?id=${video.id}&file=${video.filepath}&channel=${video.user_id}`;
+                    
+                    card.innerHTML = `
+                        <div class="thumbnail">▶ Play Video</div>
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                            <div class="video-meta">Channel ${video.user_id} • ${video.views || 0} views</div>
+                        </div>
+                    `;
+                    feedDiv.appendChild(card);
+                });
+            } catch (err) {
+                document.getElementById('feed').innerHTML = '<p style="color: red;">Failed to connect to backend.</p>';
+            }
+        }
+        
+        loadFeed();
+    </script>
+</body>
+</html>

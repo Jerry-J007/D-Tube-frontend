@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D-Tube | Upload</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="brand">▶ <span>D-Tube</span></a>
+        <div class="nav-links" id="auth-links"></div>
+    </nav>
+
+    <div class="auth-container">
+        <h2>Upload Video</h2>
+        <form id="upload-form">
+            <input type="text" id="video-title" placeholder="Video Title" required>
+            <input type="file" id="video-file" accept="video/mp4" required style="padding: 10px; background: transparent; border: none;">
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="upload-btn">
+                Publish to D-Tube
+            </button>
+        </form>
+        <p id="upload-status" style="text-align: center; margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            const statusText = document.getElementById('upload-status');
+            const btn = document.getElementById('upload-btn');
+
+            if (!token) {
+                statusText.innerText = "Error: You must be logged in to upload.";
+                statusText.style.color = "var(--dtube-red)";
+                return;
+            }
+
+            const title = document.getElementById('video-title').value;
+            const file = document.getElementById('video-file').files[0];
+
+            // Package the file securely
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('videoFile', file);
+
+            statusText.innerText = "⏳ Uploading to AWS S3... please wait.";
+            statusText.style.color = "var(--text-muted)";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_URL}/videos/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                        // Do NOT set Content-Type; FormData handles the multi-part boundary automatically
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    statusText.innerText = "✅ Upload successful!";
+                    statusText.style.color = "#4CAF50";
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    statusText.innerText = "❌ " + data.error;
+                    statusText.style.color = "var(--dtube-red)";
+                }
+            } catch (err) {
+                statusText.innerText = "❌ Network Error";
+                statusText.style.color = "var(--dtube-red)";
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
