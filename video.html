@@ -40,18 +40,19 @@
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('file');
         const channelId = urlParams.get('channel');
+        const username = urlParams.get('user');
         
         let isSubscribed = false;
 
         if (!filename || !channelId) {
             document.querySelector('.player-container').innerHTML = '<h2>Video not found.</h2>';
         } else {
-            // 1. Load the Video Stream
+            // Load Video Stream
             document.getElementById('videoSource').src = `${API_URL}/videos/stream/${filename}`;
             document.getElementById('videoPlayer').load();
-            document.getElementById('channel-name').innerText = `Channel ${channelId}`;
+            document.getElementById('channel-name').innerText = username;
             
-            // 2. Fetch Initial Subscriber Count
+            
             fetch(`${API_URL}/subscriptions/stats/${channelId}`)
                 .then(res => res.json())
                 .then(data => {
@@ -59,7 +60,7 @@
                 });
         }
 
-        // 3. Handle Subscribe Button
+        //  Subscribe Button
         async function toggleSubscription() {
             const token = localStorage.getItem('token');
             const statusText = document.getElementById('sub-status');
@@ -85,11 +86,11 @@
                     const btn = document.getElementById('sub-btn');
                     isSubscribed = data.subscribed;
                     
-                    // Update Button UI
+                
                     btn.innerText = isSubscribed ? "Unsubscribe" : "Subscribe";
                     btn.className = isSubscribed ? "btn btn-outline" : "btn btn-primary";
                     
-                    // Optimistically update the count (refresh the page to sync)
+                    //  update the count (refresh page to sync)
                     window.location.reload(); 
                 } else {
                     statusText.innerText = data.error;

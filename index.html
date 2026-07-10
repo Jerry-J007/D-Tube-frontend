@@ -38,14 +38,14 @@
                     // Create a clickable card that passes the video data in the URL
                     const card = document.createElement('div');
                     card.className = 'video-card';
-                    card.onclick = () => window.location.href = `video.html?id=${video.id}&file=${video.filepath}&channel=${video.user_id}`;
+                   card.onclick = () => window.location.href = `video.html?id=${video.id}&file=${video.filepath}&channel=${video.user_id}&user=${video.username}`;
                     
                     card.innerHTML = `
-                        <div class="thumbnail">▶ Play Video</div>
+                       <div class="thumbnail">▶ Play Video</div>
                         <div class="video-info">
                             <div class="video-title">${video.title}</div>
-                            <div class="video-meta">Channel ${video.user_id} • ${video.views || 0} views</div>
-                        </div>
+                                <div class="video-meta">${video.username} • ${video.views || 0} views</div>
+                                                </div>
                     `;
                     feedDiv.appendChild(card);
                 });
