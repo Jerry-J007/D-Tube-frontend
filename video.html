@@ -23,23 +23,27 @@
             <source id="videoSource" src="" type="video/mp4">
             Your browser does not support HTML video.
         </video>
+<div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 15px; border-radius: 12px; margin-top: 15px; flex-wrap: wrap; gap: 15px;">
+    
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div class="channel-info">
+            <h3 id="channel-name" style="margin: 0; font-size: 1.2rem; color: #fff;">Channel</h3>
+            <p id="sub-count" style="margin: 5px 0 0 0; color: #aaa; font-size: 0.9rem;">Loading subscribers...</p>
+        </div>
+        <div>
+            <button id="sub-btn" class="btn btn-primary" onclick="toggleSubscription()" style="background: #cc0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Subscribe</button>
+            <p id="sub-status" style="margin-top: 5px; color: #cc0000; font-size: 12px; margin-bottom: 0;"></p>
+        </div>
+    </div>
 
-        <div class="channel-bar">
-            <div class="channel-info">
-                <h3 id="channel-name">Channel</h3>
-                <p id="sub-count">Loading subscribers...</p>
-            </div>
-            <button id="sub-btn" class="btn btn-primary" onclick="toggleSubscription()">Subscribe</button>
-              <p id="sub-status" style="margin-top: 10px; color: var(--dtube-red); font-size: 14px;"></p>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="like-btn" class="btn btn-outline" style="background: #333; color: white; border: 1px solid #555; padding: 8px 15px; border-radius: 20px; cursor: pointer;">👍 Like (<span id="like-count">0</span>)</button>
 
-        <div class="engagement-bar">
-    <button id="like-btn" class="btn btn-outline">👍 Like (<span id="like-count">0</span>)</button>
-</div>
-<div id="creator-controls" style="margin-top: 15px; display: flex; gap: 10px; border-top: 1px solid #333; padding-top: 15px;">
-    <button id="rename-btn" class="btn btn-outline">✏️ Rename Video</button>
-    <button id="delete-btn" class="btn btn-outline" style="color: #cc0000; border-color: #cc0000;">🗑️ Delete Video</button>
-</div>
-
+        <div id="creator-controls" style="display: flex; gap: 10px; border-left: 1px solid #555; padding-left: 10px;">
+            <button id="rename-btn" class="btn btn-outline" style="background: transparent; color: white; border: 1px solid #555; padding: 8px 15px; border-radius: 20px; cursor: pointer;">✏️ Rename</button>
+            <button id="delete-btn" class="btn btn-outline" style="background: transparent; color: #cc0000; border: 1px solid #cc0000; padding: 8px 15px; border-radius: 20px; cursor: pointer;">🗑️ Delete</button>
+        </div>
+    </div>
 
 </div>
 
