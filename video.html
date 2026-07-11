@@ -35,6 +35,10 @@
         <div class="engagement-bar">
     <button id="like-btn" class="btn btn-outline">👍 Like (<span id="like-count">0</span>)</button>
 </div>
+<div id="creator-controls" style="margin-top: 15px; display: flex; gap: 10px; border-top: 1px solid #333; padding-top: 15px;">
+    <button id="rename-btn" class="btn btn-outline">✏️ Rename Video</button>
+    <button id="delete-btn" class="btn btn-outline" style="color: #cc0000; border-color: #cc0000;">🗑️ Delete Video</button>
+</div>
 
 
 </div>
@@ -171,7 +175,46 @@ document.getElementById('submit-comment').onclick = async () => {
     document.getElementById('comment-input').value = ''; // Clear input
     loadComments(); // Refresh list
 };
+// Rename Logic
+document.getElementById('rename-btn').onclick = async () => {
+    const newTitle = prompt("Enter new video title:");
+    if (!newTitle) return;
 
+    const res = await fetch(`${API_URL}/videos/${videoId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ title: newTitle })
+    });
+
+    if (res.ok) {
+        alert("Video renamed successfully!");
+        location.reload(); // Refresh the page to show the new title
+    } else {
+        alert("Failed to rename. You can only edit your own videos.");
+    }
+};
+
+// Delete Logic
+document.getElementById('delete-btn').onclick = async () => {
+    if (!confirm("Are you sure you want to delete this video? This cannot be undone.")) return;
+
+    const res = await fetch(`${API_URL}/videos/${videoId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    if (res.ok) {
+        alert("Video deleted.");
+        window.location.href = 'index.html'; // Kick them back to the feed
+    } else {
+        alert("Failed to delete. You can only delete your own videos.");
+    }
+};
 // Initialize on page load
 loadLikes();
 loadComments();
