@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D-Tube | Trending</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="brand">▶ <span>D-Tube</span></a>
+        <div class="nav-links" id="auth-links"></div>
+    </nav>
+
+    <div class="container">
+        <h2 style="margin-bottom: 20px; color: var(--dtube-red);">🔥 Trending Now</h2>
+        <div class="video-grid" id="trending-feed">
+            <p style="color: #aaa;">Calculating top videos...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        async function loadTrending() {
+            try {
+                const response = await fetch(`${API_URL}/videos/trending`);
+                const data = await response.json();
+                const feedDiv = document.getElementById('trending-feed');
+                
+                feedDiv.innerHTML = ''; 
+
+                if (!data.videos || data.videos.length === 0) {
+                    feedDiv.innerHTML = '<p>No trending videos found.</p>';
+                    return;
+                }
+
+                // Append an explicit ranking number to visually prove it works
+                data.videos.forEach((video, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.onclick = () => window.location.href = `video.html?id=${video.id}&file=${video.filepath}&channel=${video.user_id}&user=${video.username}`;
+                    
+                    card.innerHTML = `
+                        <div class="thumbnail" style="position: relative;">
+                            ▶ Play Video
+                            <span style="position: absolute; top: 10px; left: 10px; background: red; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold;">#${index + 1}</span>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                            <div class="video-meta">${video.username} • ${video.views || 0} views</div>
+                        </div>
+                    `;
+                    feedDiv.appendChild(card);
+                });
+            } catch (err) {
+                document.getElementById('trending-feed').innerHTML = '<p style="color: red;">Failed to connect to backend.</p>';
+            }
+        }
+        
+        loadTrending();
+    </script>
+</body>
+</html>
