@@ -1,5 +1,5 @@
 // Central configuration
-const API_URL = 'https://d-tube-backend.onrender.com';
+const API_URL = 'https://d-tube-backend.onrender.com/api';
 
 // Helper function to decode JWT token in vanilla JS
 function parseJwt(token) {
