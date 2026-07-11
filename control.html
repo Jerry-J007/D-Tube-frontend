@@ -63,7 +63,7 @@
             statusText.style.color = "var(--text-muted)";
 
             try {
-                const res = await fetch(`${API_URL}/admin/user/${userId}`, {
+                const res = await fetch(`${API_URL}/admin/ban/${userId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
