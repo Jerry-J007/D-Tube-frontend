@@ -23,7 +23,18 @@
             <source id="videoSource" src="" type="video/mp4">
             Your browser does not support HTML video.
         </video>
+        <div class="engagement-bar">
+    <button id="like-btn" class="btn btn-outline">👍 Like (<span id="like-count">0</span>)</button>
+</div>
 
+<div class="comments-section" style="margin-top: 20px;">
+    <h3>Comments</h3>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="comment-input" placeholder="Add a comment..." style="flex: 1;">
+        <button id="submit-comment" class="btn btn-primary">Post</button>
+    </div>
+    <div id="comments-list"></div>
+</div>
         <div class="channel-bar">
             <div class="channel-info">
                 <h3 id="channel-name">Channel</h3>
@@ -99,6 +110,62 @@
                 statusText.innerText = "Network Error";
             }
         }
+
+        // Add this to your existing video.html script
+
+async function loadLikes() {
+    const res = await fetch(`${API_URL}/videos/${videoId}/likes`);
+    const data = await res.json();
+    document.getElementById('like-count').innerText = data.count;
+}
+
+async function loadComments() {
+    const res = await fetch(`${API_URL}/videos/${videoId}/comments`);
+    const comments = await res.json();
+    
+    const commentsList = document.getElementById('comments-list');
+    commentsList.innerHTML = comments.map(c => `
+        <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333;">
+            <strong style="color: #4CAF50;">${c.username}</strong> 
+            <span style="font-size: 12px; color: #888;"> • ${c.timeAgo}</span>
+            <p style="margin: 5px 0 0 0;">${c.content}</p>
+        </div>
+    `).join('');
+}
+
+// Event Listeners
+document.getElementById('like-btn').onclick = async () => {
+    await fetch(`${API_URL}/videos/like`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        },
+        body: JSON.stringify({ videoId })
+    });
+    loadLikes(); // Refresh count
+};
+
+document.getElementById('submit-comment').onclick = async () => {
+    const content = document.getElementById('comment-input').value;
+    if (!content) return;
+
+    await fetch(`${API_URL}/videos/comment`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        },
+        body: JSON.stringify({ videoId, content })
+    });
+    
+    document.getElementById('comment-input').value = ''; // Clear input
+    loadComments(); // Refresh list
+};
+
+// Initialize on page load
+loadLikes();
+loadComments();
     </script>
 </body>
 </html>
