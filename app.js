@@ -1,7 +1,7 @@
 // Central configuration
 const API_URL = 'https://d-tube-backend.onrender.com/api';
 
-// Helper function to decode JWT token in vanilla JS
+// Helper function to decode JWT token in JS
 function parseJwt(token) {
     try {
         return JSON.parse(atob(token.split('.')[1]));
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const decoded = parseJwt(token);
             let adminButton = '';
             
-            // If the token says they are an admin, show the secret button!
+            // If the token says they are an admin, show secret button!
             if (decoded && decoded.role === 'admin') {
                 adminButton = `<a href="control.html" class="btn btn-primary" style="background-color: #555; border: 1px solid #777;">⚙️ Control Panel</a>`;
             }

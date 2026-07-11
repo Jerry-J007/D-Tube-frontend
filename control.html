@@ -30,7 +30,7 @@
 
     <script src="app.js"></script>
     <script>
-        // Security Check: Kick non-admins out immediately
+        // Security Check,Kick non-admins out immediately
         window.onload = () => {
             const token = localStorage.getItem('token');
             if (!token) return window.location.href = 'index.html';
@@ -54,9 +54,9 @@
             const token = localStorage.getItem('token');
             const statusText = document.getElementById('ban-status');
 
-            // Final confirmation pop-up
+            //pop-up
             if (!confirm(`Are you absolutely sure you want to permanently delete User ID ${userId}?`)) {
-                return; // Cancel action
+                return; 
             }
 
             statusText.innerText = "Processing server request...";
@@ -75,7 +75,7 @@
                 if (res.ok) {
                     statusText.innerText = `✅ Success: ${data.message}`;
                     statusText.style.color = "#4CAF50";
-                    document.getElementById('ban-user-id').value = ''; // Clear the input box
+                    document.getElementById('ban-user-id').value = ''; 
                 } else {
                     statusText.innerText = `❌ Error: ${data.error}`;
                     statusText.style.color = "var(--dtube-red)";

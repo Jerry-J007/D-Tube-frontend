@@ -33,7 +33,7 @@
                 const data = await response.json();
                 const feedDiv = document.getElementById('feed');
                 
-                feedDiv.innerHTML = ''; // Clear loading text
+                feedDiv.innerHTML = ''; 
 
                 if (!data.videos || data.videos.length === 0) {
                     feedDiv.innerHTML = '<p>No videos found. Be the first to upload!</p>';
@@ -41,7 +41,7 @@
                 }
 
                 data.videos.forEach(video => {
-                    // Create a clickable card that passes the video data in the URL
+                    
                     const card = document.createElement('div');
                     card.className = 'video-card';
                    card.onclick = () => window.location.href = `video.html?id=${video.id}&file=${video.filepath}&channel=${video.user_id}&user=${video.username}`;

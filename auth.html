@@ -56,7 +56,7 @@
 
     <script src="app.js"></script>
     <script>
-        // 1. UI Toggle Logic
+      
         function toggleView(showId) {
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('register-section').classList.add('hidden');
@@ -65,7 +65,7 @@
             document.getElementById(showId).classList.remove('hidden');
         }
 
-        // 2. Login Logic
+        // Login Logic
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -80,8 +80,8 @@
                 const data = await res.json();
                 
                 if (res.ok) {
-                    localStorage.setItem('token', data.token); // Save session
-                    window.location.href = 'index.html'; // Redirect to feed
+                    localStorage.setItem('token', data.token); 
+                    window.location.href = 'index.html'; 
                 } else {
                     document.getElementById('auth-status').innerText = data.error;
                 }
@@ -90,7 +90,7 @@
             }
         });
 
-        // 3. Register Logic
+        // Register Logic
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('reg-username').value;
@@ -116,7 +116,7 @@
             }
         });
 
-        // 4. Forgot Password Flow
+        //Forgot Password Logic
         document.getElementById('forgot-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('forgot-email').value;
@@ -180,7 +180,7 @@
         
         if (res.ok) {
             alert("Success: " + data.message);
-            document.getElementById('ban-user-id').value = ''; // Clear the input
+            document.getElementById('ban-user-id').value = ''; 
         } else {
             alert("Error: " + data.error);
         }
