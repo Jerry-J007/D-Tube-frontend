@@ -157,34 +157,6 @@
 
         //del user
   
-
-    document.getElementById('ban-btn').onclick = async () => {
-        const userId = document.getElementById('ban-user-id').value;
-        
-        if (!userId) {
-            return alert("Please enter a User ID first.");
-        }
-        
-        if (!confirm(`Are you absolutely sure you want to wipe User ${userId}? This cannot be undone.`)) {
-            return;
-        }
-
-        const res = await fetch(`${API_URL}/admin/ban/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        const data = await res.json();
-        
-        if (res.ok) {
-            alert("Success: " + data.message);
-            document.getElementById('ban-user-id').value = ''; 
-        } else {
-            alert("Error: " + data.error);
-        }
-    };
     </script>
 </body>
 </html>
